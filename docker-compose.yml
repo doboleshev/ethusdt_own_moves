@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: eth
+      POSTGRES_PASSWORD: eth
+      POSTGRES_DB: eth_moves
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  app:
+    build: .
+    environment:
+      ENABLE_DB: "1"
+      DATABASE_URL: postgresql+psycopg2://eth:eth@db:5432/eth_moves
+      REG_WINDOW_SECONDS: "86400"
+      ALERT_WINDOW_SECONDS: "3600"
+      ALERT_THRESHOLD: "0.01"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eth-own-moves"
+version = "0.1.0"
+description = "ETHUSDT own moves detector"
+requires-python = ">=3.11"
+dependencies = [
+    "websockets==12.0",
+    "SQLAlchemy==2.0.36",
+    "psycopg2-binary==2.9.10",
+    "pydantic==2.10.6",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q --cov=eth_own_moves --cov-report=term-missing"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["eth_own_moves"]
+
