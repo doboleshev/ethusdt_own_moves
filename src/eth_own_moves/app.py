@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from .analysis import RollingRegression, RollingSum, cumulative_return, log_return
 from .config import Settings
 from .storage import Storage
-from .stream import MarkPriceEvent, stream_mark_prices
+from .stream import MarkPriceEvent, iter_mark_prices
 
 
 @dataclass
@@ -116,7 +116,13 @@ class OwnMoveDetector:
         return False
 
     async def run(self) -> None:
-        async for event in stream_mark_prices(self.settings.websocket_url):
+        async for event in iter_mark_prices(
+            data_source=self.settings.data_source,
+            websocket_url=self.settings.websocket_url,
+            rest_url=self.settings.rest_url,
+            ws_fallback_seconds=self.settings.ws_fallback_seconds,
+            rest_poll_seconds=self.settings.rest_poll_seconds,
+        ):
             message = self._handle_event(event)
             if message:
                 print(message, flush=True)

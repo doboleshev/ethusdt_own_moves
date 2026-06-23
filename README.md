@@ -34,7 +34,7 @@
 ## Структура проекта
 
 - `src/eth_own_moves/analysis.py` — регрессия, окна, математика
-- `src/eth_own_moves/stream.py` — WebSocket поток Binance
+- `src/eth_own_moves/stream.py` — WebSocket и REST потоки Binance
 - `src/eth_own_moves/app.py` — логика realtime детектора
 - `src/eth_own_moves/storage.py` — хранение в PostgreSQL (опционально)
 - `tests/` — тесты основных компонентов
@@ -52,6 +52,20 @@ python -m pip install -e .
 python -m eth_own_moves
 ```
 
+По умолчанию используется режим `auto`: WebSocket, с автоматическим переходом на REST,
+если тики не приходят 30 секунд. Для немедленного REST-режима:
+
+```bash
+set DATA_SOURCE=rest
+python -m eth_own_moves
+```
+
+Локальная демонстрация без Binance:
+
+```bash
+python demo_local.py
+```
+
 ### Docker + PostgreSQL
 
 ```bash
@@ -61,6 +75,10 @@ docker compose up --build
 ## Переменные окружения
 
 - `WEBSOCKET_URL` — URL Binance WebSocket
+- `DATA_SOURCE` — `auto` (по умолчанию), `websocket` или `rest`
+- `REST_URL` — REST endpoint mark price (по умолчанию `https://fapi.binance.com/fapi/v1/premiumIndex`)
+- `WS_FALLBACK_SECONDS` — таймаут перед переходом на REST (по умолчанию 30)
+- `REST_POLL_SECONDS` — интервал REST-опроса в секундах (по умолчанию 1)
 - `REG_WINDOW_SECONDS` — окно регрессии (по умолчанию 86400)
 - `ALERT_WINDOW_SECONDS` — окно алерта (по умолчанию 3600)
 - `ALERT_THRESHOLD` — порог алерта (по умолчанию 0.01)
